@@ -1,16 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { copy } from "@/content/copy";
-import { Monogram } from "@/components/ui/Monogram";
 import { ButtonLink } from "@/components/ui/Button";
 
 export function Nav() {
-  const [scrolled, setScrolled] = useState(false);
+  // Hidden during the hero. The hero's sticky container is 400vh tall;
+  // once the user has scrolled ~85% of the way through it, the nav
+  // slides back in so it's in place for the next section.
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => {
+      const threshold = window.innerHeight * 3.4;
+      setVisible(window.scrollY > threshold);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -18,20 +24,29 @@ export function Nav() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-[background,backdrop-filter,border-color] duration-300 nori-ease ${
-        scrolled
-          ? "border-b hairline bg-[color:rgb(251_250_245_/_0.78)] backdrop-blur-md"
-          : "border-b border-transparent"
+      className={`pointer-events-none fixed left-0 right-0 top-0 z-50 px-3 pt-4 transition-[opacity,transform] duration-500 nori-ease md:px-6 md:pt-6 ${
+        visible
+          ? "translate-y-0 opacity-100"
+          : "pointer-events-none -translate-y-6 opacity-0"
       }`}
+      aria-hidden={!visible}
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 md:px-8">
+      <nav
+        className="pointer-events-auto mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full border-2 border-[var(--color-ink)] bg-[color:rgb(251_250_245_/_0.88)] px-4 py-2 shadow-[var(--shadow-pop)] backdrop-blur-md md:px-5 md:py-2.5"
+      >
         <Link
           href="#top"
           className="group flex items-center gap-2 text-[var(--color-ink)]"
           aria-label="NORI home"
         >
           <span className="hover-wiggle inline-flex">
-            <Monogram size={32} />
+            <Image
+              src="/Favicon.png"
+              alt=""
+              width={32}
+              height={32}
+              className="block h-8 w-8 rounded-full"
+            />
           </span>
           <span className="font-display text-[22px] leading-none">
             {copy.brand.name.toLowerCase()}

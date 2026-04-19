@@ -17,28 +17,8 @@ export const copy = {
       {
         id: 1,
         eyebrow: "// 00 — overview",
-        heading: "A sub-$1,000 robot anyone can program.",
-      },
-      {
-        id: 2,
-        eyebrow: "// 01 — hardware",
-        heading: "Two arms. Wheels. A 365mm vertical lift.",
-      },
-      {
-        id: 3,
-        eyebrow: "// 02 — assembly",
-        heading: "Assembles like IKEA. Programs like software.",
-      },
-      {
-        id: 4,
-        eyebrow: "// 03 — accessibility",
-        heading: "No EE degree. No soldering. No wiring diagrams.",
-      },
-      {
-        id: 5,
-        eyebrow: "// 04 — reserve",
-        heading: "$68 preorder. $300 off.",
-        cta: { label: "Preorder for $68", href: "#preorder" },
+        heading: "NORI L1",
+        sub: "A $988 robot anyone can program.",
       },
     ],
   },
@@ -86,7 +66,7 @@ export const copy = {
   },
   who: {
     eyebrow: "// who it's for",
-    heading: "Be direct. This isn't for everyone.",
+    heading: "This isn't for everyone.",
     blocks: [
       {
         title: "You need to know how to code.",

@@ -1,5 +1,5 @@
+import Image from "next/image";
 import { copy } from "@/content/copy";
-import { Monogram } from "@/components/ui/Monogram";
 
 export function Footer() {
   return (
@@ -7,7 +7,13 @@ export function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-10 md:flex-row md:items-center md:justify-between md:px-8">
         <div className="flex items-center gap-3 text-[var(--color-ink)]">
           <span className="hover-wiggle inline-flex">
-            <Monogram size={28} />
+            <Image
+              src="/Favicon.png"
+              alt=""
+              width={28}
+              height={28}
+              className="block h-7 w-7 rounded-full"
+            />
           </span>
           <div className="flex flex-col">
             <span className="font-display text-[18px] leading-none">

@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     images: ["/og.png"],
   },
   icons: {
-    icon: "/favicon.svg",
+    icon: "/Favicon.png",
   },
 };
 

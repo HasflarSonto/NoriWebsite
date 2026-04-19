@@ -1,4 +1,3 @@
-import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { Software } from "@/components/sections/Software";
@@ -10,7 +9,6 @@ import { Preorder } from "@/components/sections/Preorder";
 export default function HomePage() {
   return (
     <main className="min-h-screen">
-      <Nav />
       <Hero />
       <Software />
       <HowItWorks />
