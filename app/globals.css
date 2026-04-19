@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+@theme {
+  /* Light paper palette — warm, creamy, not pure white */
+  --color-paper: #fbfaf5;
+  --color-paper-2: #f3f1e8;
+  --color-paper-3: #ebe8db;
+  --color-ink: #14131a;
+  --color-ink-2: #2a2833;
+  --color-mute: #6b6878;
+  --color-line: rgba(20, 19, 26, 0.14);
+  --color-line-strong: rgba(20, 19, 26, 0.28);
+  --color-sticker: #ffe9a8;   /* soft custard highlight */
+  --color-sticker-2: #ffd4d4; /* soft blush */
+  --color-leaf: #cde8b5;      /* trifoglio leaf green */
+
+  --font-sans: "Fredoka", ui-rounded, ui-sans-serif, system-ui, -apple-system,
+    "SF Pro Rounded", "Helvetica Neue", sans-serif;
+  --font-display: "Bagel Fat One", "Fredoka", ui-rounded, ui-sans-serif,
+    system-ui, sans-serif;
+  --font-body: "Fredoka", ui-rounded, ui-sans-serif, system-ui, -apple-system,
+    sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease-nori: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --shadow-soft: 0 1px 0 rgba(20, 19, 26, 0.04),
+    0 8px 24px -12px rgba(20, 19, 26, 0.12);
+  --shadow-pop: 0 2px 0 rgba(20, 19, 26, 0.06),
+    0 20px 40px -20px rgba(20, 19, 26, 0.25);
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    color-scheme: light;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    line-height: 0.98;
+  }
+
+  h4 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(
+      rgba(20, 19, 26, 0.08) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  .hairline {
+    border-color: var(--color-line);
+  }
+
+  .hairline-strong {
+    border-color: var(--color-line-strong);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-mute);
+  }
+
+  .nori-ease {
+    transition-timing-function: var(--ease-nori);
+  }
+
+  .bounce-ease {
+    transition-timing-function: var(--ease-bounce);
+  }
+
+  .card-soft {
+    background: var(--color-paper);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .card-pop {
+    background: var(--color-paper);
+    box-shadow: var(--shadow-pop);
+  }
+
+  .ink-card {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  /* little wiggle for the monogram on hover */
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-2deg);
+    }
+    50% {
+      transform: rotate(4deg);
+    }
+  }
+  .hover-wiggle:hover {
+    animation: wiggle 420ms var(--ease-bounce);
+  }
+
+  /* gentle float */
+  @keyframes floaty {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
+  .floaty {
+    animation: floaty 3.4s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
