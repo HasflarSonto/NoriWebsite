@@ -207,6 +207,7 @@ export function Hero() {
             video edges — reinforcing "the video is part of the page". */}
         <div className="dot-grid pointer-events-none absolute inset-0 z-[1] opacity-60" />
 
+
         {/* Video pinned to the right. Offset from the top gives real
             whitespace above the frame. Layout is fully inline so the
             video is correctly sized before the stylesheet loads
@@ -256,10 +257,24 @@ export function Hero() {
           />
         </div>
 
-        {/* Ambient leaf wash — a whisper of green so the hero feels unified
-            without tinting the robot. Kept very soft and pushed off-frame. */}
+        {/* Ambient pastel wash — sits ABOVE the video (z-4), not behind
+            it. That's the only way to avoid a visible seam: anything
+            placed *behind* the video has to stop where the white
+            backdrop for the multiply blend begins, and the eye always
+            catches that boundary. Putting the wash on top means the
+            color extends uniformly across the whole stage with no
+            endpoint to perceive. Alpha stays very low (≤0.18) so the
+            robot only picks up a faint warmth that matches the rest
+            of the site's paper tone. */}
         <div
-          className="pointer-events-none absolute inset-0 z-[4] bg-[radial-gradient(ellipse_at_5%_35%,_rgba(205,232,181,0.18),_transparent_55%)]"
+          className="pointer-events-none absolute inset-0 z-[4]"
+          style={{
+            background:
+              "radial-gradient(110vmax 90vmax at -10% 20%, rgba(205, 232, 181, 0.22), transparent 70%),\
+               radial-gradient(100vmax 90vmax at -5% 110%, rgba(255, 233, 168, 0.2), transparent 72%),\
+               radial-gradient(90vmax 80vmax at 115% 0%, rgba(255, 212, 212, 0.14), transparent 75%),\
+               radial-gradient(80vmax 70vmax at 50% 50%, rgba(205, 232, 181, 0.05), transparent 80%)",
+          }}
           aria-hidden
         />
 
@@ -269,6 +284,16 @@ export function Hero() {
             video; on md+ it centers vertically in its own column. */}
         <div className="absolute inset-0 z-[5] flex items-start px-5 pt-[22vh] sm:pt-[18vh] md:items-center md:pl-10 md:pr-6 md:pt-0 lg:pl-16">
           <div className="relative flex w-full max-w-[48ch] flex-col justify-center gap-5 md:h-[72vh] md:gap-7">
+            {/* Decorative sticker — tilted pastel pill drifting above the
+                eyebrow. Uses .floaty for gentle bob and a small rotate to
+                feel like it was slapped on by hand. */}
+            <span
+              className="floaty inline-flex w-fit -rotate-3 items-center gap-1.5 rounded-full border-2 border-[var(--color-ink)] bg-[var(--color-sticker)] px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--color-ink)] shadow-[var(--shadow-soft)]"
+              aria-hidden
+            >
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-ink)]" />
+              beta · L1
+            </span>
             <span className="eyebrow">{panels[0].eyebrow}</span>
             <h1 className="font-display text-[clamp(2.9rem,11vw,6.4rem)] leading-[0.9] tracking-tight text-[var(--color-ink)]">
               {panels[0].heading}
@@ -278,12 +303,16 @@ export function Hero() {
                 {panels[0].sub}
               </p>
             )}
-            <div ref={ctaRef} className="mt-3 flex flex-wrap items-center gap-4">
+            <div
+              ref={ctaRef}
+              className="mt-3 flex flex-wrap items-center gap-4"
+            >
               <ButtonLink
-                href="#preorder"
-                className="!px-7 !py-4 !text-[16px]"
+                href="/preorder"
+                className="!px-7 !py-[14px] !text-[20px]"
               >
                 Preorder $68
+                <span aria-hidden className="ml-1">→</span>
               </ButtonLink>
               <span className="eyebrow !text-[13px]">· $300 off $1,288</span>
             </div>
@@ -292,7 +321,7 @@ export function Hero() {
 
         {/* Preorder CTA — right */}
         <Link
-          href="#preorder"
+          href="/preorder"
           className="absolute right-4 top-4 z-[6] inline-flex items-center rounded-full border-2 border-[var(--color-ink)] bg-[var(--color-ink)] px-4 py-1.5 text-[13px] font-medium text-[var(--color-paper)] shadow-[var(--shadow-pop)] transition-transform duration-300 hover:-translate-y-0.5 md:right-8 md:top-8"
         >
           Preorder now

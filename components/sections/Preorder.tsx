@@ -1,30 +1,34 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
-import {
-  createCheckoutSession,
-  type CheckoutResult,
-} from "@/app/actions/createCheckoutSession";
+import { subscribe, type SubscribeResult } from "@/app/actions/subscribe";
 import { copy } from "@/content/copy";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { Input, Label, Textarea } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
+import { Button, ButtonLink } from "@/components/ui/Button";
 
 export function Preorder() {
-  const [state, formAction, pending] = useActionState<CheckoutResult | null, FormData>(
-    createCheckoutSession,
-    null,
-  );
+  const [state, formAction, pending] = useActionState<
+    SubscribeResult | null,
+    FormData
+  >(subscribe, null);
 
+  // After a successful subscribe, the UI swaps to a confirmation
+  // card. The form state itself is preserved in case the user
+  // refreshes, but we don't do anything further here (no redirect,
+  // no analytics event — add later if needed).
   useEffect(() => {
     if (state?.ok) {
-      window.location.href = state.url;
+      // no-op — left as a hook point for tracking later
     }
   }, [state]);
 
   return (
-    <section id="preorder" className="relative overflow-hidden border-t hairline bg-[var(--color-paper-2)]">
+    <section
+      id="preorder"
+      className="relative overflow-hidden border-t hairline bg-[var(--color-paper-2)]"
+    >
       <div
         className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[var(--color-leaf)] opacity-70 blur-3xl"
         aria-hidden
@@ -35,6 +39,8 @@ export function Preorder() {
       />
 
       <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-28 md:grid-cols-[1.1fr_1fr] md:px-8 md:py-36">
+        {/* Left column — the buy. Price math + scarcity + one big
+            button that hops straight to Stripe via /preorder. */}
         <div className="flex flex-col gap-5">
           <FadeIn>
             <Eyebrow>{copy.preorder.eyebrow}</Eyebrow>
@@ -78,76 +84,119 @@ export function Preorder() {
             </div>
           </FadeIn>
 
-          <FadeIn delay={240}>
-            <p className="mt-6 max-w-md text-sm leading-relaxed text-[var(--color-mute)]">
+          <FadeIn delay={220}>
+            {/* Scarcity chip — promoted out of fine-print so it's the
+                first thing the eye catches under the chips. Blush
+                backdrop to read as an alert without being red. */}
+            <span className="mt-4 inline-flex w-fit items-center gap-2 rounded-full border-2 border-[var(--color-ink)] bg-[var(--color-sticker-2)] px-3.5 py-1.5 font-mono text-[12px] font-semibold uppercase tracking-[0.14em]">
+              <span
+                className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-ink)]"
+                aria-hidden
+              />
+              {copy.preorder.scarcity}
+            </span>
+          </FadeIn>
+
+          <FadeIn delay={280}>
+            <div className="mt-4 flex flex-wrap items-center gap-4">
+              <ButtonLink
+                href="/preorder"
+                className="!px-8 !py-[16px] !text-[18px]"
+              >
+                {copy.preorder.cta}
+                <span aria-hidden className="ml-1">
+                  →
+                </span>
+              </ButtonLink>
+              <span className="eyebrow">Secure checkout · Stripe</span>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={340}>
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-[var(--color-mute)]">
               {copy.preorder.fine}
             </p>
           </FadeIn>
         </div>
 
+        {/* Right column — the curious. Email list + optional prompt.
+            Same card treatment as the old form so the layout rhythm
+            of this section is preserved. */}
         <FadeIn delay={120}>
-          <form
-            action={formAction}
-            className="rounded-[28px] border-2 border-[var(--color-ink)] bg-[var(--color-paper)] p-6 shadow-[var(--shadow-pop)] md:p-7"
-          >
-            <div className="flex flex-col gap-4">
-              <div>
-                <Label htmlFor="name">{copy.preorder.fields.name}</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  autoComplete="name"
-                  required
-                  placeholder="Ada Lovelace"
-                />
-                {state && !state.ok && state.fieldErrors?.name && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {state.fieldErrors.name[0]}
-                  </p>
-                )}
+          {state?.ok ? (
+            <div className="flex h-full flex-col justify-center rounded-[28px] border-2 border-[var(--color-ink)] bg-[var(--color-paper)] p-7 shadow-[var(--shadow-pop)] md:p-8">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-[var(--color-ink)] bg-[var(--color-leaf)]">
+                <span
+                  aria-hidden
+                  className="font-display text-2xl leading-none"
+                >
+                  ✓
+                </span>
               </div>
-
-              <div>
-                <Label htmlFor="email">{copy.preorder.fields.email}</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  placeholder="you@domain.dev"
-                />
-                {state && !state.ok && state.fieldErrors?.email && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {state.fieldErrors.email[0]}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="prompt" optional>
-                  {copy.preorder.fields.prompt}
-                </Label>
-                <Textarea
-                  id="prompt"
-                  name="prompt"
-                  placeholder="A barista at home. A nightly lab assistant. A robot that folds my laundry…"
-                />
-              </div>
-
-              {state && !state.ok && !state.fieldErrors && (
-                <p className="text-sm text-red-600">{state.error}</p>
-              )}
-
-              <Button type="submit" disabled={pending} className="mt-2 w-full">
-                {pending ? "Redirecting…" : copy.preorder.cta}
-              </Button>
-
-              <p className="eyebrow text-center">
-                Secure checkout via Stripe · Cancel any time before ship
+              <Eyebrow className="mt-5">{copy.community.eyebrow}</Eyebrow>
+              <h3 className="mt-3 font-display text-[2.1rem] leading-[1] tracking-tight">
+                {copy.community.success.title}
+              </h3>
+              <p className="mt-3 text-[15px] leading-relaxed text-[var(--color-mute)]">
+                {copy.community.success.body}
               </p>
             </div>
-          </form>
+          ) : (
+            <form
+              action={formAction}
+              className="rounded-[28px] border-2 border-[var(--color-ink)] bg-[var(--color-paper)] p-6 shadow-[var(--shadow-pop)] md:p-7"
+            >
+              <div className="flex flex-col gap-4">
+                <div>
+                  <Eyebrow>{copy.community.eyebrow}</Eyebrow>
+                  <h3 className="mt-3 font-display text-[1.9rem] leading-[1] tracking-tight">
+                    {copy.community.heading}
+                  </h3>
+                  <p className="mt-2 text-[14px] leading-relaxed text-[var(--color-mute)]">
+                    {copy.community.subheading}
+                  </p>
+                </div>
+
+                <div>
+                  <Label htmlFor="email">{copy.community.fields.email}</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    placeholder="you@domain.dev"
+                  />
+                  {state && !state.ok && state.fieldErrors?.email && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {state.fieldErrors.email[0]}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="prompt" optional>
+                    {copy.community.fields.prompt}
+                  </Label>
+                  <Textarea
+                    id="prompt"
+                    name="prompt"
+                    placeholder="A barista at home. A nightly lab assistant. A robot that folds my laundry…"
+                  />
+                </div>
+
+                {state && !state.ok && !state.fieldErrors && (
+                  <p className="text-sm text-red-600">{state.error}</p>
+                )}
+
+                <Button type="submit" disabled={pending} className="mt-2 w-full">
+                  {pending ? copy.community.pending : copy.community.cta}
+                </Button>
+
+                <p className="eyebrow text-center">{copy.community.fine}</p>
+              </div>
+            </form>
+          )}
         </FadeIn>
       </div>
     </section>

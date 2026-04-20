@@ -26,7 +26,7 @@ export default function PreorderCancelPage() {
           Your card wasn&apos;t charged. Come back any time — the $300-off preorder window is open until we ship.
         </p>
         <div className="mt-8">
-          <ButtonLink href="/#preorder">Try again</ButtonLink>
+          <ButtonLink href="/preorder">Try again</ButtonLink>
         </div>
       </div>
     </main>

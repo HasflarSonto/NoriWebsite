@@ -66,7 +66,7 @@ export function Nav() {
           ))}
         </div>
 
-        <ButtonLink href="#preorder" className="text-[13px]">
+        <ButtonLink href="/preorder" className="text-[13px]">
           {copy.nav.cta}
         </ButtonLink>
       </nav>

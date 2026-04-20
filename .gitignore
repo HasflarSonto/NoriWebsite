@@ -29,3 +29,10 @@ next-env.d.ts
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# AI tool skills — installed locally via `npx skills add`
+.agents/
+.claude/
+.trae/
+skills/
+skills-lock.json

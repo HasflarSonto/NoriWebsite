@@ -90,12 +90,25 @@ export const copy = {
     subheading:
       "$68 deposit. $300 off the final price of $1,288. Final cost: $988.",
     cta: "Preorder for $68",
+    scarcity: "Only 50 preorder slots open.",
     fine: "Early backers get access to the open-source codebase, Discord community, and priority shipping.",
+  },
+  community: {
+    eyebrow: "// join the community",
+    heading: "Join the community.",
+    subheading:
+      "Drop your email. We'll send build videos, ship dates, and early invites. No spam.",
     fields: {
-      name: "Name",
       email: "Email",
-      prompt: "What would you build with NORI?",
+      prompt: "What would you build with NORI? (optional)",
     },
+    cta: "Join the list",
+    pending: "Joining…",
+    success: {
+      title: "You're in.",
+      body: "Check your inbox for a welcome note. We'll keep you posted.",
+    },
+    fine: "Unsubscribe any time. Your email is only used for NORI updates.",
   },
   footer: {
     tagline: "Built at Columbia. Open source. MIT License.",

@@ -5,6 +5,11 @@ const serverSchema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
   RESEND_FROM: z.string().min(1).optional(),
+  // Community signup destinations — both optional. Missing =
+  // server action no-ops cleanly (signup still shows "you're in"
+  // so local dev without Resend configured still looks right).
+  RESEND_AUDIENCE_ID: z.string().min(1).optional(),
+  RESEND_NOTIFY_TO: z.string().email().optional(),
   KV_REST_API_URL: z.string().url().optional().or(z.literal("")),
   KV_REST_API_TOKEN: z.string().optional(),
 });
@@ -18,6 +23,8 @@ export const serverEnv = serverSchema.parse({
   STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   RESEND_FROM: process.env.RESEND_FROM,
+  RESEND_AUDIENCE_ID: process.env.RESEND_AUDIENCE_ID,
+  RESEND_NOTIFY_TO: process.env.RESEND_NOTIFY_TO,
   KV_REST_API_URL: process.env.KV_REST_API_URL,
   KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
 });
