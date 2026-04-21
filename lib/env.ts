@@ -10,13 +10,14 @@ const serverSchema = z.object({
   STRIPE_PRODUCT_ID: z.string().min(1).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
   RESEND_FROM: z.string().min(1).optional(),
-  // Community signup destinations — both optional. Missing =
-  // server action no-ops cleanly (signup still shows "you're in"
-  // so local dev without Resend configured still looks right).
-  RESEND_AUDIENCE_ID: z.string().min(1).optional(),
-  RESEND_NOTIFY_TO: z.string().email().optional(),
-  KV_REST_API_URL: z.string().url().optional().or(z.literal("")),
-  KV_REST_API_TOKEN: z.string().optional(),
+  // Supabase — community signup list. URL comes from the public env
+  // (Next.js marks NEXT_PUBLIC_* vars as client-readable but they're
+  // also available server-side). The service-role key is server-only;
+  // it bypasses RLS so keep it out of any client bundle. Missing =
+  // subscribe action no-ops (form still says "you're in" so local dev
+  // without Supabase wired up still looks right).
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
 });
 
 const publicSchema = z.object({
@@ -29,10 +30,15 @@ export const serverEnv = serverSchema.parse({
   STRIPE_PRODUCT_ID: process.env.STRIPE_PRODUCT_ID,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   RESEND_FROM: process.env.RESEND_FROM,
-  RESEND_AUDIENCE_ID: process.env.RESEND_AUDIENCE_ID,
-  RESEND_NOTIFY_TO: process.env.RESEND_NOTIFY_TO,
-  KV_REST_API_URL: process.env.KV_REST_API_URL,
-  KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
+  // Vercel's Supabase integration prefixes env vars with the database
+  // name (e.g. `noril1_POSTGRES_URL`). Read the prefixed form as a
+  // fallback so the code stays portable across integrations.
+  SUPABASE_URL:
+    process.env.NEXT_PUBLIC_SUPABASE_URL ??
+    process.env.NEXT_PUBLIC_noril1_SUPABASE_URL,
+  SUPABASE_SERVICE_ROLE_KEY:
+    process.env.SUPABASE_SERVICE_ROLE_KEY ??
+    process.env.noril1_SUPABASE_SERVICE_ROLE_KEY,
 });
 
 export const publicEnv = publicSchema.parse({

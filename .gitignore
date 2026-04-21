@@ -36,3 +36,4 @@ yarn-error.log*
 .trae/
 skills/
 skills-lock.json
+.env*.local
