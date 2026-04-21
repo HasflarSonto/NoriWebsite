@@ -1,64 +1,10 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { getStripe } from "@/lib/stripe";
-import { publicEnv, serverEnv } from "@/lib/env";
+import { NextResponse } from "next/server";
 
-// GET /preorder — creates a Stripe Checkout session on the fly and
-// redirects the browser straight to Stripe. Every Preorder CTA on
-// the site points here, so there's no intermediate "enter your
-// name + email" form (Stripe collects that itself).
-//
-// This is a Route Handler (not a Page) so there's no render cycle —
-// the server calls Stripe and returns a 303 redirect in one round
-// trip. Fast enough that a link to `/preorder` feels like a direct
-// link to Stripe.
-export async function GET(req: NextRequest) {
-  const stripe = getStripe();
+// GET /preorder — 303-redirects to the hosted Stripe Payment Link.
+// Every Preorder CTA on the site points here, so swapping the
+// destination in one place re-routes the whole funnel.
+const PAYMENT_LINK = "https://buy.stripe.com/bJe3cxeCq4SJ88C6GQ3VC00";
 
-  // Graceful fallback — if payments aren't configured, send the
-  // user to the cancel page with a small error marker rather than
-  // a 500. Matches the degradation behavior in the rest of the
-  // codebase (sendPreorderConfirmation also no-ops if unset).
-  if (!stripe || !serverEnv.STRIPE_PRODUCT_ID) {
-    return NextResponse.redirect(
-      new URL("/preorder/cancel?reason=not_configured", req.url),
-      303,
-    );
-  }
-
-  try {
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          quantity: 1,
-          price_data: {
-            currency: "usd",
-            unit_amount: 6800, // $68.00
-            // Stripe-managed Product — name/description/image live in
-            // the Dashboard. The ID differs per Stripe mode (test vs
-            // live), so it's env-driven.
-            product: serverEnv.STRIPE_PRODUCT_ID,
-          },
-        },
-      ],
-      success_url: `${publicEnv.NEXT_PUBLIC_SITE_URL}/preorder/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${publicEnv.NEXT_PUBLIC_SITE_URL}/preorder/cancel`,
-    });
-
-    if (!session.url) {
-      return NextResponse.redirect(
-        new URL("/preorder/cancel?reason=no_url", req.url),
-        303,
-      );
-    }
-
-    return NextResponse.redirect(session.url, 303);
-  } catch (err) {
-    console.error("[preorder] Stripe session creation failed:", err);
-    return NextResponse.redirect(
-      new URL("/preorder/cancel?reason=stripe_error", req.url),
-      303,
-    );
-  }
+export function GET() {
+  return NextResponse.redirect(PAYMENT_LINK, 303);
 }
