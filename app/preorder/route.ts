@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getStripe } from "@/lib/stripe";
-import { publicEnv } from "@/lib/env";
+import { publicEnv, serverEnv } from "@/lib/env";
 
 // GET /preorder — creates a Stripe Checkout session on the fly and
 // redirects the browser straight to Stripe. Every Preorder CTA on
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   // user to the cancel page with a small error marker rather than
   // a 500. Matches the degradation behavior in the rest of the
   // codebase (sendPreorderConfirmation also no-ops if unset).
-  if (!stripe) {
+  if (!stripe || !serverEnv.STRIPE_PRODUCT_ID) {
     return NextResponse.redirect(
       new URL("/preorder/cancel?reason=not_configured", req.url),
       303,
@@ -36,8 +36,9 @@ export async function GET(req: NextRequest) {
             currency: "usd",
             unit_amount: 6800, // $68.00
             // Stripe-managed Product — name/description/image live in
-            // the Dashboard. See prod_UN80ldyCb8IQoW.
-            product: "prod_UN80ldyCb8IQoW",
+            // the Dashboard. The ID differs per Stripe mode (test vs
+            // live), so it's env-driven.
+            product: serverEnv.STRIPE_PRODUCT_ID,
           },
         },
       ],
