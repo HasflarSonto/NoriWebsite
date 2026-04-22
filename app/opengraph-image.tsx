@@ -199,9 +199,11 @@ export default async function OGImage() {
         </div>
 
         {/* Right image column — no border, shares the same wash.
-            Offset a bit from the right edge, with a clear left margin
-            away from the text column so the robot doesn't crowd the
-            headline. */}
+            Stripe.png has significant transparent padding on the
+            left/right edges, so we overflow-clip the wrapper and
+            render the img wider than the column. The robot fills
+            the visible area, the empty sides get cropped off.
+            Image is bottom-weighted so the wheels anchor the card. */}
         <div
           style={{
             position: "absolute",
@@ -212,6 +214,7 @@ export default async function OGImage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            overflow: "hidden",
             zIndex: 1,
           }}
         >
@@ -219,13 +222,13 @@ export default async function OGImage() {
           <img
             src={robotUrl}
             alt=""
-            width={720}
+            width={900}
             height={720}
             style={{
-              objectFit: "contain",
+              width: 900,
+              height: 720,
+              objectFit: "cover",
               objectPosition: "center",
-              maxHeight: "100%",
-              maxWidth: "100%",
             }}
           />
         </div>
