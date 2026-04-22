@@ -209,10 +209,10 @@ export default async function OGImage() {
         <div
           style={{
             position: "absolute",
-            right: -10,
+            right: 0,
             top: 0,
             bottom: 0,
-            width: 560,
+            width: 520,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -224,11 +224,11 @@ export default async function OGImage() {
           <img
             src={robotUrl}
             alt=""
-            width={700}
-            height={630}
+            width={620}
+            height={560}
             style={{
-              width: 700,
-              height: 630,
+              width: 620,
+              height: 560,
               objectFit: "cover",
               objectPosition: "center",
             }}
