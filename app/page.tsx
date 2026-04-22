@@ -1,7 +1,7 @@
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
-import { Software } from "@/components/sections/Software";
-import { HowItWorks } from "@/components/sections/HowItWorks";
+import { Capable } from "@/components/sections/Capable";
+import { SharedSkills } from "@/components/sections/SharedSkills";
 import { Comparison } from "@/components/sections/Comparison";
 import { WhoThisIsFor } from "@/components/sections/WhoThisIsFor";
 import { Preorder } from "@/components/sections/Preorder";
@@ -10,8 +10,8 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       <Hero />
-      <Software />
-      <HowItWorks />
+      <Capable />
+      <SharedSkills />
       <Comparison />
       <WhoThisIsFor />
       <Preorder />
