@@ -171,12 +171,15 @@ export default async function OGImage() {
 
           {/* Bottom strip — eyebrow tag only. CTA pill removed
               because X overlays its own "NORI L1" title chip in the
-              lower-left, which covers any button we put there. */}
+              lower-left, which covers any button we put there.
+              Right-aligned so it clears the overlay entirely. */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
+              justifyContent: "flex-end",
               marginTop: 32,
+              paddingRight: 40,
             }}
           >
             <div
@@ -193,14 +196,16 @@ export default async function OGImage() {
           </div>
         </div>
 
-        {/* Right image column — no border, shares the same wash */}
+        {/* Right image column — no border, shares the same wash.
+            Widened so the robot fills more of the card; slight negative
+            right offset lets it bleed toward the edge without cropping. */}
         <div
           style={{
             position: "absolute",
-            right: 0,
+            right: -20,
             top: 0,
             bottom: 0,
-            width: 600,
+            width: 720,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -211,13 +216,13 @@ export default async function OGImage() {
           <img
             src={robotUrl}
             alt=""
-            width={580}
-            height={620}
+            width={720}
+            height={720}
             style={{
               objectFit: "contain",
               objectPosition: "center",
-              maxHeight: "98%",
-              maxWidth: "98%",
+              maxHeight: "100%",
+              maxWidth: "100%",
             }}
           />
         </div>
