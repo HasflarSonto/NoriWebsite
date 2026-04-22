@@ -70,14 +70,16 @@ export default async function OGImage() {
           }}
         />
 
-        {/* Left text column */}
+        {/* Left text column — narrowed so the robot has breathing
+            room on its left edge instead of butting up against the
+            headline. */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
             padding: "62px 0 64px 76px",
-            width: 720,
+            width: 640,
             zIndex: 1,
           }}
         >
@@ -148,10 +150,10 @@ export default async function OGImage() {
             <div
               style={{
                 fontFamily: headlineFont,
-                fontSize: 96,
+                fontSize: 92,
                 lineHeight: 0.95,
                 letterSpacing: -2,
-                maxWidth: 640,
+                maxWidth: 560,
               }}
             >
               A sub-$1,000 robot anyone can program.
@@ -161,7 +163,7 @@ export default async function OGImage() {
                 fontSize: 24,
                 color: "#6b6878",
                 letterSpacing: -0.3,
-                maxWidth: 600,
+                maxWidth: 540,
                 lineHeight: 1.3,
               }}
             >
@@ -197,15 +199,16 @@ export default async function OGImage() {
         </div>
 
         {/* Right image column — no border, shares the same wash.
-            Widened so the robot fills more of the card; slight negative
-            right offset lets it bleed toward the edge without cropping. */}
+            Offset a bit from the right edge, with a clear left margin
+            away from the text column so the robot doesn't crowd the
+            headline. */}
         <div
           style={{
             position: "absolute",
-            right: -20,
+            right: 20,
             top: 0,
             bottom: 0,
-            width: 720,
+            width: 600,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
