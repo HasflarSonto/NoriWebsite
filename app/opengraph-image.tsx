@@ -202,15 +202,17 @@ export default async function OGImage() {
             Stripe.png has significant transparent padding on the
             left/right edges, so we overflow-clip the wrapper and
             render the img wider than the column. The robot fills
-            the visible area, the empty sides get cropped off.
-            Image is bottom-weighted so the wheels anchor the card. */}
+            the visible area, the empty sides get cropped off. The
+            img is rendered taller than the wrapper (630px canvas)
+            so objectFit: cover crops the transparent edges on both
+            axes without clipping the robot itself. */}
         <div
           style={{
             position: "absolute",
-            right: 20,
+            right: -10,
             top: 0,
             bottom: 0,
-            width: 600,
+            width: 560,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -222,11 +224,11 @@ export default async function OGImage() {
           <img
             src={robotUrl}
             alt=""
-            width={900}
-            height={720}
+            width={700}
+            height={630}
             style={{
-              width: 900,
-              height: 720,
+              width: 700,
+              height: 630,
               objectFit: "cover",
               objectPosition: "center",
             }}
