@@ -5,10 +5,12 @@ import { SharedSkills } from "@/components/sections/SharedSkills";
 import { Comparison } from "@/components/sections/Comparison";
 import { WhoThisIsFor } from "@/components/sections/WhoThisIsFor";
 import { Preorder } from "@/components/sections/Preorder";
+import { SplashGate } from "@/components/ui/SplashGate";
 
 export default function HomePage() {
   return (
     <main className="min-h-screen">
+      <SplashGate />
       <Hero />
       <Capable />
       <SharedSkills />
