@@ -165,46 +165,30 @@ export default async function OGImage() {
                 lineHeight: 1.3,
               }}
             >
-              Two arms. Wheels. 365mm vertical lift. IKEA-grade assembly, software you can fork.
+              Two arms. Wheels. 600mm vertical lift. Easy assembly, open-source software.
             </div>
           </div>
 
-          {/* Bottom strip — CTA + tag */}
+          {/* Bottom strip — eyebrow tag only. CTA pill removed
+              because X overlays its own "NORI L1" title chip in the
+              lower-left, which covers any button we put there. */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 20,
               marginTop: 32,
             }}
           >
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                background: "#14131a",
-                color: "#fbfaf5",
-                padding: "16px 26px",
-                borderRadius: 999,
-                fontSize: 22,
-                fontWeight: 700,
-                letterSpacing: -0.2,
-                border: "3px solid #14131a",
-                boxShadow: "6px 6px 0 #14131a",
-              }}
-            >
-              Preorder $68 →
-            </div>
-            <div
-              style={{
-                fontSize: 18,
+                fontSize: 20,
                 color: "#6b6878",
                 fontFamily: "ui-monospace, monospace",
-                letterSpacing: 1.4,
+                letterSpacing: 1.6,
                 textTransform: "uppercase",
               }}
             >
-              // $300 off $1,288
+              // preorder $68 — $300 off $1,288
             </div>
           </div>
         </div>
@@ -216,7 +200,7 @@ export default async function OGImage() {
             right: 0,
             top: 0,
             bottom: 0,
-            width: 520,
+            width: 600,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -227,13 +211,13 @@ export default async function OGImage() {
           <img
             src={robotUrl}
             alt=""
-            width={480}
-            height={560}
+            width={580}
+            height={620}
             style={{
               objectFit: "contain",
               objectPosition: "center",
-              maxHeight: "92%",
-              maxWidth: "92%",
+              maxHeight: "98%",
+              maxWidth: "98%",
             }}
           />
         </div>
