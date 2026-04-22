@@ -37,7 +37,6 @@ export const metadata: Metadata = {
       "A sub-$1,000 bimanual robot for developers. Preorder for $68.",
     url: "/",
     siteName: "NORI",
-    images: ["/og.png"],
     locale: "en_US",
     type: "website",
   },
@@ -46,7 +45,6 @@ export const metadata: Metadata = {
     title: "NORI L1",
     description: "A sub-$1,000 robot anyone can program.",
     creator: "@AntonioSitongLi",
-    images: ["/og.png"],
   },
   icons: {
     icon: "/Favicon.png",
