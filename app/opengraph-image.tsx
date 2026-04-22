@@ -5,17 +5,41 @@ export const alt = "NORI L1 — a sub-$1,000 robot anyone can program";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Embed the real robot hero shot on the right half of the card so the
-// OG preview looks like a product page, not a plain text slug.
+// Seamless OG card: white canvas with the hero's ambient pastel wash
+// layered on top, brand + text on the left, Stripe.png robot on the
+// right. Uses Bagel Fat One (the site's display face) for the
+// headline so the OG matches the actual hero typography.
 export default async function OGImage() {
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL ||
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
     "http://localhost:3000";
 
-  // next/og's <img> can fetch absolute URLs at render time — cleaner
-  // than base64-inlining, and correctly scoped to the deployed origin.
-  const heroSrc = `${baseUrl}/images/nori-hero.jpg`;
+  // Satori can't parse WOFF/WOFF2 — it needs TTF/OTF. We bundle both
+  // TTFs in /public/fonts so we don't have to fight Google Fonts'
+  // content-negotiation at the edge. Bagel Fat One is the display
+  // face (headline + "nori" pill), Inter is the neutral sans for
+  // body copy and the CTA — closest Satori-compatible analogue to
+  // the site's Fredoka at this point size. If either fetch fails
+  // we fall back gracefully.
+  const [bagelRes, interRegRes, interSemiRes] = await Promise.all([
+    fetch(`${baseUrl}/fonts/BagelFatOne-Regular.ttf`).catch(() => null),
+    fetch(`${baseUrl}/fonts/Inter-Regular.ttf`).catch(() => null),
+    fetch(`${baseUrl}/fonts/Inter-SemiBold.ttf`).catch(() => null),
+  ]);
+  const bagelData = bagelRes?.ok ? await bagelRes.arrayBuffer() : null;
+  const interRegData = interRegRes?.ok
+    ? await interRegRes.arrayBuffer()
+    : null;
+  const interSemiData = interSemiRes?.ok
+    ? await interSemiRes.arrayBuffer()
+    : null;
+
+  const headlineFont = bagelData ? "Bagel Fat One" : "sans-serif";
+  const bodyFont = interRegData ? "Inter" : "sans-serif";
+
+  const faviconUrl = `${baseUrl}/Favicon.png`;
+  const robotUrl = `${baseUrl}/images/Stripe.png`;
 
   return new ImageResponse(
     (
@@ -24,55 +48,70 @@ export default async function OGImage() {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "#fbfaf5",
+          background: "#ffffff",
           color: "#14131a",
-          fontFamily: "system-ui, sans-serif",
+          fontFamily: bodyFont,
           position: "relative",
         }}
       >
+        {/* Ambient pastel wash — two big radials painted directly on
+            the root background. Satori honors comma-separated radials
+            but they have to be stacked on one element's bg. */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: "flex",
+            background:
+              "radial-gradient(1100px 780px at 0% 20%, rgba(205, 232, 181, 0.85), rgba(205, 232, 181, 0) 65%), radial-gradient(900px 700px at 100% 100%, rgba(255, 212, 212, 0.55), rgba(255, 212, 212, 0) 70%), radial-gradient(900px 700px at 100% 0%, rgba(255, 233, 168, 0.45), rgba(255, 233, 168, 0) 70%)",
+          }}
+        />
+
         {/* Left text column */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            padding: "64px 0 64px 72px",
+            padding: "62px 0 64px 76px",
             width: 720,
+            zIndex: 1,
           }}
         >
-          {/* Brand pill */}
+          {/* Brand pill — uses the real Favicon.png, matches the nav
+              pill shape/rules exactly. */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 14,
+              gap: 10,
               border: "3px solid #14131a",
               background: "#fbfaf5",
               borderRadius: 999,
-              padding: "10px 20px 10px 14px",
+              padding: "8px 18px 8px 8px",
               alignSelf: "flex-start",
               boxShadow: "6px 6px 0 #14131a",
             }}
           >
-            <svg width="40" height="40" viewBox="0 0 80 80">
-              <g fill="#14131a">
-                <circle cx="40" cy="18" r="14" />
-                <circle cx="62" cy="40" r="14" />
-                <circle cx="40" cy="62" r="14" />
-                <circle cx="18" cy="40" r="14" />
-                <circle cx="40" cy="40" r="20" />
-              </g>
-              <g fill="#fbfaf5">
-                <rect x="30" y="30" width="5.8" height="20" rx="2.9" />
-                <rect x="44.2" y="30" width="5.8" height="20" rx="2.9" />
-              </g>
-              <circle cx="64" cy="22" r="3.2" fill="#14131a" />
-            </svg>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={faviconUrl}
+              alt=""
+              width={44}
+              height={44}
+              style={{ borderRadius: 999 }}
+            />
             <div
               style={{
-                fontSize: 34,
-                fontWeight: 800,
-                letterSpacing: -1.2,
+                fontFamily: headlineFont,
+                fontSize: 38,
+                letterSpacing: -0.8,
+                marginLeft: 2,
+                lineHeight: 1,
+                paddingTop: 6,
               }}
             >
               nori
@@ -108,10 +147,10 @@ export default async function OGImage() {
           >
             <div
               style={{
-                fontSize: 84,
+                fontFamily: headlineFont,
+                fontSize: 96,
                 lineHeight: 0.95,
-                letterSpacing: -3,
-                fontWeight: 800,
+                letterSpacing: -2,
                 maxWidth: 640,
               }}
             >
@@ -130,7 +169,7 @@ export default async function OGImage() {
             </div>
           </div>
 
-          {/* Bottom strip: CTA + tagline */}
+          {/* Bottom strip — CTA + tag */}
           <div
             style={{
               display: "flex",
@@ -170,7 +209,7 @@ export default async function OGImage() {
           </div>
         </div>
 
-        {/* Right image column — the robot shot */}
+        {/* Right image column — no border, shares the same wash */}
         <div
           style={{
             position: "absolute",
@@ -181,27 +220,59 @@ export default async function OGImage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background:
-              "radial-gradient(60% 60% at 50% 45%, #cde8b5 0%, #fbfaf5 70%)",
-            borderLeft: "3px solid #14131a",
+            zIndex: 1,
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={heroSrc}
+            src={robotUrl}
             alt=""
             width={480}
             height={560}
             style={{
               objectFit: "contain",
               objectPosition: "center",
-              maxHeight: "88%",
-              maxWidth: "90%",
+              maxHeight: "92%",
+              maxWidth: "92%",
             }}
           />
         </div>
       </div>
     ),
-    { ...size },
+    {
+      ...size,
+      fonts: [
+        ...(bagelData
+          ? [
+              {
+                name: "Bagel Fat One",
+                data: bagelData,
+                style: "normal" as const,
+                weight: 400 as const,
+              },
+            ]
+          : []),
+        ...(interRegData
+          ? [
+              {
+                name: "Inter",
+                data: interRegData,
+                style: "normal" as const,
+                weight: 400 as const,
+              },
+            ]
+          : []),
+        ...(interSemiData
+          ? [
+              {
+                name: "Inter",
+                data: interSemiData,
+                style: "normal" as const,
+                weight: 600 as const,
+              },
+            ]
+          : []),
+      ],
+    },
   );
 }
